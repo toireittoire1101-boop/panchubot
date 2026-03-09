@@ -73,7 +73,9 @@ export const {
       },
     }),
   ],
-  callbacks: {
+  redirect() {
+  return "https://panchu-hs46.vercel.app/";
+}: {
     jwt({ token, user }) {
       if (user) {
         token.id = user.id as string;
