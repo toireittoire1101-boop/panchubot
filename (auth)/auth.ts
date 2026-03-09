@@ -37,7 +37,9 @@ export const {
   signOut,
 } = NextAuth({
   ...authConfig,
+
   providers: [
+    // 通常ログイン
     Credentials({
       credentials: {},
       async authorize({ email, password }: any) {
@@ -64,6 +66,8 @@ export const {
         return { ...user, type: "regular" };
       },
     }),
+
+    // ゲストログイン
     Credentials({
       id: "guest",
       credentials: {},
@@ -73,23 +77,26 @@ export const {
       },
     }),
   ],
-  redirect() {
-  return "https://panchu-hs46.vercel.app/";
-}: {
+
+  // ⭐ 本番URLへ必ず戻すための設定
+  callbacks: {
+    async redirect() {
+      return "https://panchu-hs46.vercel.app/";
+    },
+
     jwt({ token, user }) {
       if (user) {
         token.id = user.id as string;
         token.type = user.type;
       }
-
       return token;
     },
+
     session({ session, token }) {
       if (session.user) {
         session.user.id = token.id;
         session.user.type = token.type;
       }
-
       return session;
     },
   },
